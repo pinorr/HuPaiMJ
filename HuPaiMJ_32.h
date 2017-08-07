@@ -66,14 +66,14 @@ inline bool isValidKey(int llVal)
 }
 
 set<int>				g_setSingle;		//单个顺子+刻子		50个
-set<int>				g_setSingleFZ;		//单个刻子			22个
+set<int>				g_setSingleFZ;		//单个顺子+刻子		22个
 set<int>				g_setSingleJiang;	//单个将			19个
-set<int>				g_setSingleJiangFZ;	//单个将(刻子)		15个
+set<int>				g_setSingleJiangFZ;	//单个将			15个
 
 unordered_set<int>		g_usetHuAll;			//
-unordered_set<int>		g_usetHuAllFZ;			//
-unordered_set<int>		g_usetHuAllJiang;		//
-unordered_set<int>		g_usetHuAllJiangFZ;		//
+unordered_set<int>		g_usetHuAllFZ;			// 风、字牌
+unordered_set<int>		g_usetHuAllJiang;		// 带将
+unordered_set<int>		g_usetHuAllJiangFZ;		// 带将 风、字牌
 
 
 class CHuPaiMJ
