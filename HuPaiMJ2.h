@@ -225,12 +225,8 @@ public:
 		for (; iter != g_setSingleJiangFZ.end(); ++iter)
 			nSingleJiangKe[nAllJiangFZ++] = *iter;
 
-		BYTE nNum;
-		int nKey;
 		for (int i1 = 0; i1 < nAllFZ; ++i1)
 		{
-			nNum = getNumByKey2(nSingleFZ[i1]);
-			nKey = getKeyNoNai(nSingleFZ[i1]);
 			addMap(g_mapHuAllFZ, nSingleFZ[i1]);
 			for (int i2 = i1; i2 < nAllFZ; ++i2)
 			{
