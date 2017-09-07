@@ -1,8 +1,8 @@
 /********************************************************************
-	created:	pinorr
-	file base:	HuPaiMJ.h
-	author:		pinorr	Q 505971450
-	purpose:	Âé½«ºúÅÆÌáÊ¾Ëã·¨(µÚ2°æ)
+created:	pinorr
+file base:	HuPaiMJ.h
+author:		pinorr	Q 505971450
+purpose:	éº»å°†èƒ¡ç‰Œæç¤ºç®—æ³•(ç¬¬2ç‰ˆ)
 *********************************************************************/
 
 #ifndef __HU_PAI_MJ_H__
@@ -19,31 +19,31 @@
 
 using namespace std;
 
-#define MAX_KEY_NUM						(MAX_VAL_NUM+1)		//9+Àµ×Ó
-#define MAX_NAI_NUM						4					//Àµ×Ó×î´ó¸öÊı
-#define BIT_VAL_NUM						3					//Ò»¸öÖµÕ¼µÄbitÊı
+#define MAX_KEY_NUM						(MAX_VAL_NUM+1)		//9+èµ–å­
+#define MAX_NAI_NUM						4					//èµ–å­æœ€å¤§ä¸ªæ•°
+#define BIT_VAL_NUM						3					//ä¸€ä¸ªå€¼å çš„bitæ•°
 #define BIT_VAL_FLAG					0x07				//
 
 struct stCorOut
 {
 	BYTE byCorType;					//
-	bool byNum;						// ×ÜÕÅÊı
+	bool byNum;						// æ€»å¼ æ•°
 	BYTE byValNum[MAX_KEY_NUM];		//
 };
 
 inline void getIndexByKey2(int llVal, BYTE byIndex[MAX_KEY_NUM])
 {
-	for (int i=0; i<MAX_KEY_NUM; ++i)
+	for (int i = 0; i<MAX_KEY_NUM; ++i)
 	{
-		byIndex[i] = (llVal>>(BIT_VAL_NUM*i))&BIT_VAL_FLAG;
+		byIndex[i] = (llVal >> (BIT_VAL_NUM*i))&BIT_VAL_FLAG;
 	}
 }
 
 inline int getKey2ByIndex(BYTE byIndex[MAX_KEY_NUM])
 {
 	int nKey = 0;
-	for (int i=0; i<MAX_KEY_NUM; ++i)
-		nKey |= (int)(byIndex[i]&BIT_VAL_FLAG)<<(BIT_VAL_NUM*i);
+	for (int i = 0; i<MAX_KEY_NUM; ++i)
+		nKey |= (int)(byIndex[i] & BIT_VAL_FLAG) << (BIT_VAL_NUM*i);
 
 	return nKey;
 }
@@ -56,24 +56,32 @@ inline bool isValidKey(int llVal)
 		return false;
 
 	int nNum = 0;
-	for (int i=0; i<MAX_KEY_NUM; ++i)
+	for (int i = 0; i<MAX_KEY_NUM; ++i)
 	{
 		nNum += byIndex[i];
 		if (byIndex[i] > 4 || nNum > 14)	//
-			return false;		
+			return false;
 	}
 	return nNum > 0;
 }
+inline BYTE getNumByKey(int llVal)
+{
+	BYTE byIndex[MAX_KEY_NUM] = {};
+	getIndexByKey2(llVal, byIndex);
+	BYTE nNum = 0;
+	for (int i = 0; i < MAX_KEY_NUM; ++i)
+		nNum += byIndex[i];	
 
-set<int>				g_setSingle;		//µ¥¸öË³×Ó+¿Ì×Ó		50¸ö
-set<int>				g_setSingleFZ;		//µ¥¸öË³×Ó+¿Ì×Ó		22¸ö
-set<int>				g_setSingleJiang;	//µ¥¸ö½«			19¸ö
-set<int>				g_setSingleJiangFZ;	//µ¥¸ö½«			15¸ö
+	return nNum;
+}
 
-unordered_set<int>		g_usetHuAll;			//
-unordered_set<int>		g_usetHuAllFZ;			// ·ç¡¢×ÖÅÆ
-unordered_set<int>		g_usetHuAllJiang;		// ´ø½«
-unordered_set<int>		g_usetHuAllJiangFZ;		// ´ø½« ·ç¡¢×ÖÅÆ
+set<int>				g_setSingle;		//å•ä¸ªé¡ºå­+åˆ»å­		50ä¸ª
+set<int>				g_setSingleFZ;		//å•ä¸ªé¡ºå­+åˆ»å­		22ä¸ª
+set<int>				g_setSingleJiang;	//å•ä¸ªå°†			19ä¸ª
+set<int>				g_setSingleJiangFZ;	//å•ä¸ªå°†			15ä¸ª
+
+unordered_set<int>		g_usetHuAll[15];			//
+unordered_set<int>		g_usetHuAllFZ[15];			// é£ã€å­—ç‰Œ
 
 
 class CHuPaiMJ
@@ -82,68 +90,68 @@ public:
 	CHuPaiMJ(){};
 	~CHuPaiMJ(){};
 
-public:	
-	static void TrainSingle()			// 1.ÈıÕÅµ¥¶À×éºÏ
+public:
+	static void TrainSingle()			// 1.ä¸‰å¼ å•ç‹¬ç»„åˆ
 	{
 		BYTE byTemp[MAX_KEY_NUM] = {};
 		byTemp[9] = 3;
 		g_setSingle.insert(getKey2ByIndex(byTemp));
 		g_setSingleFZ.insert(getKey2ByIndex(byTemp));
-		// 1.1 ¿Ì×Ó
-		for (int i=0; i<MAX_VAL_NUM; ++i)
+		// 1.1 åˆ»å­
+		for (int i = 0; i<MAX_VAL_NUM; ++i)
 		{
 			memset(byTemp, 0, MAX_KEY_NUM);
-			for (int n=0; n<3; ++n)
+			for (int n = 0; n<3; ++n)
 			{
-				byTemp[i] = 3-n;
+				byTemp[i] = 3 - n;
 				byTemp[9] = n;
 				g_setSingle.insert(getKey2ByIndex(byTemp));
-				if (i < 7)	//·ç¡¢×ÖÅÆ×î¶à7ÕÅ
+				if (i < 7)	//é£ã€å­—ç‰Œæœ€å¤š7å¼ 
 					g_setSingleFZ.insert(getKey2ByIndex(byTemp));
 			}
 		}
-		// 1.2 Ë³×Ó Ã»Àµ×Ó
-		for (int i=0; i<MAX_VAL_NUM-2; ++i)
+		// 1.2 é¡ºå­ æ²¡èµ–å­
+		for (int i = 0; i<MAX_VAL_NUM - 2; ++i)
 		{
-			memset(byTemp, 0, MAX_KEY_NUM);	
-			byTemp[i]	= 1;
-			byTemp[i+1]	= 1;
-			byTemp[i+2]	= 1;
-			g_setSingle.insert(getKey2ByIndex(byTemp));					
-		}
-		// 1.2 Ë³×Ó 1¸öÀµ×Ó (2¸öÀµ×ÓÊ±Ò²¾ÍÊÇ¿Ì×Ó)
-		for (int i=0; i<MAX_VAL_NUM-2; ++i)
-		{
-			memset(byTemp, 0, MAX_KEY_NUM);	
-			byTemp[i]	= 1;
-			byTemp[i+1]	= 1;
-			byTemp[9]	= 1;
-			g_setSingle.insert(getKey2ByIndex(byTemp));	
-			memset(byTemp, 0, MAX_KEY_NUM);	
-			byTemp[9]	= 1;
-			byTemp[i+1]	= 1;
-			byTemp[i+2]	= 1;			
-			g_setSingle.insert(getKey2ByIndex(byTemp));
-			memset(byTemp, 0, MAX_KEY_NUM);	
-			byTemp[i]	= 1;
-			byTemp[9]	= 1;
-			byTemp[i+2]	= 1;
+			memset(byTemp, 0, MAX_KEY_NUM);
+			byTemp[i] = 1;
+			byTemp[i + 1] = 1;
+			byTemp[i + 2] = 1;
 			g_setSingle.insert(getKey2ByIndex(byTemp));
 		}
-		// 1.3 ½«ÅÆ
-		memset(byTemp, 0, MAX_KEY_NUM);	
+		// 1.2 é¡ºå­ 1ä¸ªèµ–å­ (2ä¸ªèµ–å­æ—¶ä¹Ÿå°±æ˜¯åˆ»å­)
+		for (int i = 0; i<MAX_VAL_NUM - 2; ++i)
+		{
+			memset(byTemp, 0, MAX_KEY_NUM);
+			byTemp[i] = 1;
+			byTemp[i + 1] = 1;
+			byTemp[9] = 1;
+			g_setSingle.insert(getKey2ByIndex(byTemp));
+			memset(byTemp, 0, MAX_KEY_NUM);
+			byTemp[9] = 1;
+			byTemp[i + 1] = 1;
+			byTemp[i + 2] = 1;
+			g_setSingle.insert(getKey2ByIndex(byTemp));
+			memset(byTemp, 0, MAX_KEY_NUM);
+			byTemp[i] = 1;
+			byTemp[9] = 1;
+			byTemp[i + 2] = 1;
+			g_setSingle.insert(getKey2ByIndex(byTemp));
+		}
+		// 1.3 å°†ç‰Œ
+		memset(byTemp, 0, MAX_KEY_NUM);
 		byTemp[9] = 2;
 		g_setSingleJiang.insert(getKey2ByIndex(byTemp));
 		g_setSingleJiangFZ.insert(getKey2ByIndex(byTemp));
-		for (int i=0; i<MAX_VAL_NUM; ++i)
+		for (int i = 0; i<MAX_VAL_NUM; ++i)
 		{
 			memset(byTemp, 0, MAX_KEY_NUM);
-			for (int n=0; n<2; ++n)
+			for (int n = 0; n<2; ++n)
 			{
-				byTemp[i] = 2-n;
+				byTemp[i] = 2 - n;
 				byTemp[9] = n;
 				g_setSingleJiang.insert(getKey2ByIndex(byTemp));
-				if (i < 7)	//·ç¡¢×ÖÅÆ×î¶à7ÕÅ
+				if (i < 7)	//é£ã€å­—ç‰Œæœ€å¤š7å¼ 
 					g_setSingleJiangFZ.insert(getKey2ByIndex(byTemp));
 			}
 		}
@@ -152,21 +160,21 @@ public:
 	{
 		TrainSingle();
 
-		int nAll	= 0;
-		int nAllFZ	= 0;
-		int nSingle[100]	= {};
-		int nSingleKe[50] = {};
+		int nAll = 0;
+		int nAllFZ = 0;
+		int nSingle[100] = {};
+		int nSingleFZ[50] = {};
 
 		set<int>::iterator iter = g_setSingle.begin();
 		for (; iter != g_setSingle.end(); ++iter)
 			nSingle[nAll++] = *iter;
 		iter = g_setSingleFZ.begin();
 		for (; iter != g_setSingleFZ.end(); ++iter)
-			nSingleKe[nAllFZ++] = *iter;
+			nSingleFZ[nAllFZ++] = *iter;
 
-		int nAllJiang	= 0;
-		int nAllJiangFZ	= 0;
-		int nSingleJiang[20]	 = {};
+		int nAllJiang = 0;
+		int nAllJiangFZ = 0;
+		int nSingleJiang[20] = {};
 		int nSingleJiangKe[20] = {};
 
 		iter = g_setSingleJiang.begin();
@@ -176,117 +184,125 @@ public:
 		for (; iter != g_setSingleJiangFZ.end(); ++iter)
 			nSingleJiangKe[nAllJiangFZ++] = *iter;
 
-		for (int i1=0; i1<nAllFZ; ++i1)
+		for (int i1 = 0; i1<nAllFZ; ++i1)
 		{
-			g_usetHuAllFZ.insert(nSingleKe[i1]);
-			for (int i2=i1; i2<nAllFZ; ++i2)
-			{								
-				if (!isValidKey(nSingleKe[i1] + nSingleKe[i2])) 
-					continue;
-
-				g_usetHuAllFZ.insert(nSingleKe[i1] + nSingleKe[i2]);
-				for (int i3=i2; i3<nAllFZ; ++i3)
-				{					
-					if (!isValidKey(nSingleKe[i1] + nSingleKe[i2] + nSingleKe[i3])) 
-						continue;
-					g_usetHuAllFZ.insert(nSingleKe[i1] + nSingleKe[i2] + nSingleKe[i3]);
-					for (int i4=i3; i4<nAllFZ; ++i4)
-					{						
-						if (!isValidKey(nSingleKe[i1] + nSingleKe[i2] + nSingleKe[i3] + nSingleKe[i4])) 
-							continue;
-						g_usetHuAllFZ.insert(nSingleKe[i1] + nSingleKe[i2] + nSingleKe[i3] + nSingleKe[i4]);
-					}
-				}
-			}
-		}	
-
-		for (int i=0; i<nAllJiangFZ; ++i)
-		{
-			g_usetHuAllJiangFZ.insert(nSingleJiangKe[i]);
-			unordered_set<int>::iterator iter_u = g_usetHuAllFZ.begin();
-			for (; iter_u!=g_usetHuAllFZ.end(); ++iter_u)
+			g_usetHuAllFZ[getNumByKey(nSingleFZ[i1])].insert(nSingleFZ[i1]);
+			for (int i2 = i1; i2<nAllFZ; ++i2)
 			{
-				if (isValidKey(nSingleJiangKe[i] + *iter_u)) 
-				{
-					g_usetHuAllJiangFZ.insert(nSingleJiangKe[i] + *iter_u);
-				}
-			}
-		}
-		cout<<(int)sizeof(*(g_setSingleFZ.begin()))<<endl;
-		cout<<"pino:"<<dec<<g_setSingleFZ.size()<<endl;
-		cout<<"pino:"<<dec<<g_usetHuAllFZ.size()<<endl;
-		cout<<"pino:"<<dec<<g_usetHuAllJiangFZ.size()<<endl;
-
-		for (int i1=0; i1<nAll; ++i1)
-		{
-			g_usetHuAll.insert(nSingle[i1]);
-			for (int i2=i1; i2<nAll; ++i2)
-			{								
-				if (!isValidKey(nSingle[i1] + nSingle[i2])) 
+				int nTemp = nSingleFZ[i1] + nSingleFZ[i2];
+				if (!isValidKey(nTemp))
 					continue;
-				g_usetHuAll.insert(nSingle[i1] + nSingle[i2]);
-				for (int i3=i2; i3<nAll; ++i3)
-				{					
-					if (!isValidKey(nSingle[i1] + nSingle[i2] + nSingle[i3])) 
+				g_usetHuAllFZ[getNumByKey(nTemp)].insert(nTemp);
+				for (int i3 = i2; i3<nAllFZ; ++i3)
+				{
+					int nTemp = nSingleFZ[i1] + nSingleFZ[i2] + nSingleFZ[i3];
+					if (!isValidKey(nTemp))
 						continue;
-					g_usetHuAll.insert(nSingle[i1] + nSingle[i2] + nSingle[i3]);
-					for (int i4=i3; i4<nAll; ++i4)
-					{						
-						if (!isValidKey(nSingle[i1] + nSingle[i2] + nSingle[i3] + nSingle[i4])) 
+					g_usetHuAllFZ[getNumByKey(nTemp)].insert(nTemp);
+					for (int i4 = i3; i4<nAllFZ; ++i4)
+					{
+						int nTemp = nSingleFZ[i1] + nSingleFZ[i2] + nSingleFZ[i3] + nSingleFZ[i4];
+						if (!isValidKey(nTemp))
 							continue;
-						g_usetHuAll.insert(nSingle[i1] + nSingle[i2] + nSingle[i3] + nSingle[i4]);
+						g_usetHuAllFZ[getNumByKey(nTemp)].insert(nTemp);
 					}
 				}
 			}
 		}
 
-		for (int i=0; i<nAllJiang; ++i)
+		for (int i = 0; i<nAllJiangFZ; ++i)
 		{
-			g_usetHuAllJiang.insert(nSingleJiang[i]);
-			unordered_set<int>::iterator iter_u = g_usetHuAll.begin();
-			for (; iter_u!=g_usetHuAll.end(); ++iter_u)
+			for (int j = 0; j < 15; ++j)
 			{
-				if (isValidKey(nSingleJiang[i] + *iter_u)) 
+				if (j % 3 != 0)
+					continue;
+
+				g_usetHuAllFZ[getNumByKey(nSingleJiangKe[i])].insert(nSingleJiangKe[i]);
+				unordered_set<int>::iterator iter_u = g_usetHuAllFZ[j].begin();
+				for (; iter_u != g_usetHuAllFZ[j].end(); ++iter_u)
 				{
-					g_usetHuAllJiang.insert(nSingleJiang[i] + *iter_u);
+					int nTemp = nSingleJiangKe[i] + *iter_u;
+					if (isValidKey(nTemp))
+						g_usetHuAllFZ[getNumByKey(nTemp)].insert(nTemp);
+				}
+			}			
+		}
+		cout << (int)sizeof(*(g_setSingleFZ.begin())) << endl;
+// 		cout << "pino:" << dec << g_setSingleFZ.size() << endl;
+// 		cout << "pino:" << dec << g_usetHuAllFZ.size() << endl;
+// 		cout << "pino:" << dec << g_usetHuAllJiangFZ.size() << endl;
+
+		for (int i1 = 0; i1<nAll; ++i1)
+		{
+			g_usetHuAll[getNumByKey(nSingle[i1])].insert(nSingle[i1]);
+			for (int i2 = i1; i2<nAll; ++i2)
+			{
+				int nTemp = nSingle[i1] + nSingle[i2];
+				if (!isValidKey(nTemp))
+					continue;
+				g_usetHuAll[getNumByKey(nTemp)].insert(nTemp);
+				for (int i3 = i2; i3<nAll; ++i3)
+				{
+					int nTemp = nSingle[i1] + nSingle[i2] + nSingle[i3];					
+					if (!isValidKey(nTemp))
+						continue;
+					g_usetHuAll[getNumByKey(nTemp)].insert(nTemp);
+					for (int i4 = i3; i4<nAll; ++i4)
+					{
+						int nTemp = nSingle[i1] + nSingle[i2] + nSingle[i3] + nSingle[i4];						
+						if (!isValidKey(nTemp))
+							continue;
+						g_usetHuAll[getNumByKey(nTemp)].insert(nTemp);
+					}
 				}
 			}
 		}
-		cout<<endl;
-		cout<<"pino:"<<dec<<g_setSingle.size()<<endl;
-		cout<<"pino:"<<dec<<g_usetHuAll.size()<<endl;
-		cout<<"pino:"<<dec<<g_usetHuAllJiang.size()<<endl;
 
-		cout<<g_setSingle.size() + g_setSingleFZ.size() + g_usetHuAll.size() + g_usetHuAllFZ.size() + g_usetHuAllJiang.size() + g_usetHuAllJiangFZ.size()<<endl;
-	}	
+		for (int i = 0; i<nAllJiang; ++i)
+		{
+			for (int j = 0; j < 15; ++j)
+			{
+				if (j%3 != 0)
+					continue;
+
+				g_usetHuAll[getNumByKey(nSingleJiang[i])].insert(nSingleJiang[i]);
+				unordered_set<int>::iterator iter_u = g_usetHuAll[j].begin();
+				for (; iter_u != g_usetHuAll[j].end(); ++iter_u)
+				{
+					int nTemp = nSingleJiang[i] + *iter_u;
+					if (isValidKey(nTemp))
+						g_usetHuAll[getNumByKey(nTemp)].insert(nTemp);
+				}
+			}
+		}
+		cout << endl;
+		cout << "pino:" << dec << g_setSingle.size() << endl;
+		//cout << "pino:" << dec << g_usetHuAll.size() << endl;
+		//cout << "pino:" << dec << g_usetHuAllJiang.size() << endl;
+	}
 
 	static bool CheckCanHuSingle(stColorData &stColor, BYTE byNaiNum)
 	{
-		stColor.byCount[9] = byNaiNum;
-		BYTE byLeftNum = (stColor.byNum+byNaiNum)%3;
-		if (byLeftNum == 1) 
+		BYTE byAll = stColor.byNum + byNaiNum;
+		BYTE byLeftNum = byAll % 3;
+		if (byLeftNum == 1)
 			return false;
 
 		if (stColor.byNum == 0)
 			return true;
-		
-		if (byLeftNum == 0)
-		{
-			if (stColor.byCorType == enColorMJ_FenZi)
-				return g_usetHuAllFZ.find(getKey2ByIndex(stColor.byCount)) != g_usetHuAllFZ.end();
-			else
-				return g_usetHuAll.find(getKey2ByIndex(stColor.byCount)) != g_usetHuAll.end();
-		}
+
+		int nFlag = (int)(byNaiNum & BIT_VAL_FLAG) << (BIT_VAL_NUM * 9);
+		int nKey = getKey2ByIndex(stColor.byCount) + nFlag;
+
+		if (stColor.byCorType == enColorMJ_FenZi)
+			return g_usetHuAllFZ[byAll].find(nKey) != g_usetHuAllFZ[byAll].end();
 		else
-		{
-			if (stColor.byCorType == enColorMJ_FenZi)
-				return g_usetHuAllJiangFZ.find(getKey2ByIndex(stColor.byCount)) != g_usetHuAllJiangFZ.end();
-			else
-				return g_usetHuAllJiang.find(getKey2ByIndex(stColor.byCount)) != g_usetHuAllJiang.end();				
-		}
+			return g_usetHuAll[byAll].find(nKey) != g_usetHuAll[byAll].end();
+
 		return false;
-	}	
-	static bool CheckCanHu(stCardData &stData, BYTE byNaiIndex, int nNaiZiUse[enColorMJ_Max])
+	}
+
+	static bool CheckCanHu(stCardData &stData, BYTE byNaiIndex)
 	{
 		if (stData.byNum % 3 != 2)
 			return false;
@@ -299,64 +315,57 @@ public:
 			stData.byNum -= nNaiZiNum;
 		}
 
-		int nNaiZiMax[enColorMJ_Max] = {4, 4, 4, 4};
+		int nNaiZiMax[enColorMJ_Max] = { 4, 4, 4, 4 };
 		stColorData stColorTemp[enColorMJ_Max];
-		for (int cor=0; cor<enColorMJ_Max; ++cor)
-		{		
+		for (int cor = 0; cor<enColorMJ_Max; ++cor)
+		{
 			stColorTemp[cor].byCorType = cor;
 			int nAll = (cor == enColorMJ_FenZi) ? 7 : MAX_VAL_NUM;
 			if (cor*MAX_VAL_NUM + nAll <= MAX_TOTAL_TYPE)
-			{				
-				memcpy(stColorTemp[cor].byCount, stData.byCardNum+cor*MAX_VAL_NUM, nAll);
-				for (int i=0; i<nAll; ++i)
-					stColorTemp[cor].byNum += stColorTemp[cor].byCount[i];			
+			{
+				memcpy(stColorTemp[cor].byCount, stData.byCardNum + cor*MAX_VAL_NUM, nAll);
+				for (int i = 0; i<nAll; ++i)
+					stColorTemp[cor].byNum += stColorTemp[cor].byCount[i];
 			}
 			if (stColorTemp[cor].byNum == 0)
 				nNaiZiMax[cor] = 0;
 		}
 
 		BYTE byLeftNum[enColorMJ_Max] = {};
-		for (int i1=0; i1<=min(nNaiZiMax[0], nNaiZiNum); ++i1)
-		{		
-			byLeftNum[enColorMJ_WAN] = (stColorTemp[0].byNum+i1)%3;
+		for (int i1 = 0; i1 <= min(nNaiZiMax[0], nNaiZiNum); ++i1)
+		{
+			byLeftNum[enColorMJ_WAN] = (stColorTemp[0].byNum + i1) % 3;
 			if (byLeftNum[enColorMJ_WAN] == 1) continue;
-			for (int i2=0; i2<=min(nNaiZiMax[1], nNaiZiNum-i1); ++i2)
+			for (int i2 = 0; i2 <= min(nNaiZiMax[1], nNaiZiNum - i1); ++i2)
 			{
-				byLeftNum[enColorMJ_TONG] = (stColorTemp[1].byNum+i2)%3;
+				byLeftNum[enColorMJ_TONG] = (stColorTemp[1].byNum + i2) % 3;
 				if (byLeftNum[enColorMJ_TONG] == 1) continue;
-				for (int i3=0; i3<=min(nNaiZiMax[2], nNaiZiNum-i1-i2); ++i3)
+				for (int i3 = 0; i3 <= min(nNaiZiMax[2], nNaiZiNum - i1 - i2); ++i3)
 				{
-					byLeftNum[enColorMJ_TIAO] = (stColorTemp[2].byNum+i3)%3;
+					byLeftNum[enColorMJ_TIAO] = (stColorTemp[2].byNum + i3) % 3;
 					if (byLeftNum[enColorMJ_TIAO] == 1) continue;
-					int i4 = nNaiZiNum-i1-i2-i3;
+					int i4 = nNaiZiNum - i1 - i2 - i3;
 					if (i4 <= nNaiZiMax[3])
 					{
-						byLeftNum[enColorMJ_FenZi] = (stColorTemp[3].byNum+i4)%3;
-						if (byLeftNum[enColorMJ_FenZi] == 1 || byLeftNum[0]+byLeftNum[1]+byLeftNum[2]+byLeftNum[3] != 2) continue;
-
-						stColorData stTemp[enColorMJ_Max];
-						memcpy(stTemp, stColorTemp, sizeof(stTemp));					
-
-						if (stColorTemp[0].byNum>0 && !CheckCanHuSingle(stTemp[0], i1))
+						byLeftNum[enColorMJ_FenZi] = (stColorTemp[3].byNum + i4) % 3;
+						if (byLeftNum[enColorMJ_FenZi] == 1 || byLeftNum[0] + byLeftNum[1] + byLeftNum[2] + byLeftNum[3] != 2) continue;
+												
+						if (stColorTemp[0].byNum>0 && !CheckCanHuSingle(stColorTemp[0], i1))
 							continue;
-						if (stColorTemp[1].byNum>0 && !CheckCanHuSingle(stTemp[1], i2))
+						if (stColorTemp[1].byNum>0 && !CheckCanHuSingle(stColorTemp[1], i2))
 							continue;
-						if (stColorTemp[2].byNum>0 && !CheckCanHuSingle(stTemp[2], i3))
+						if (stColorTemp[2].byNum>0 && !CheckCanHuSingle(stColorTemp[2], i3))
 							continue;
-						if (stColorTemp[3].byNum>0 && !CheckCanHuSingle(stTemp[3], i4))
+						if (stColorTemp[3].byNum>0 && !CheckCanHuSingle(stColorTemp[3], i4))
 							continue;
 
-						nNaiZiUse[0] = i1;
-						nNaiZiUse[1] = i2;
-						nNaiZiUse[2] = i3;
-						nNaiZiUse[3] = i4;
 						return true;
 					}
-				}			
+				}
 			}
-		}	
+		}
 		return false;
-	};	
+	};
 };
 
 #endif  //__CPLAYER_H__
