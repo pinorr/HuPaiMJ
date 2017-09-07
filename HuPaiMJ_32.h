@@ -114,7 +114,7 @@ public:
 		for (int i = 0; i<MAX_VAL_NUM - 2; ++i)
 		{
 			memset(byTemp, 0, MAX_KEY_NUM);
-			byTemp[i] = 1;
+			byTemp[i] = 1;	
 			byTemp[i + 1] = 1;
 			byTemp[i + 2] = 1;
 			g_setSingle.insert(getKey2ByIndex(byTemp));
@@ -227,7 +227,7 @@ public:
 				}
 			}			
 		}
-		cout << (int)sizeof(*(g_setSingleFZ.begin())) << endl;
+//		cout << (int)sizeof(*(g_setSingleFZ.begin())) << endl;
 // 		cout << "pino:" << dec << g_setSingleFZ.size() << endl;
 // 		cout << "pino:" << dec << g_usetHuAllFZ.size() << endl;
 // 		cout << "pino:" << dec << g_usetHuAllJiangFZ.size() << endl;
@@ -275,8 +275,8 @@ public:
 				}
 			}
 		}
-		cout << endl;
-		cout << "pino:" << dec << g_setSingle.size() << endl;
+		//cout << endl;
+		//cout << "pino:" << dec << g_setSingle.size() << endl;
 		//cout << "pino:" << dec << g_usetHuAll.size() << endl;
 		//cout << "pino:" << dec << g_usetHuAllJiang.size() << endl;
 	}
@@ -308,7 +308,7 @@ public:
 			return false;
 
 		int nNaiZiNum = 0;
-		if (byNaiIndex != INVALID_VAL)
+		if (byNaiIndex < MAX_TOTAL_TYPE)
 		{
 			nNaiZiNum = stData.byCardNum[byNaiIndex];
 			stData.byCardNum[byNaiIndex] = 0;
