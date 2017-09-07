@@ -339,11 +339,14 @@ public:
 		BYTE nNaiTry[4] = {};
 		for (int cor = 0; cor < enColorMJ_Max; ++cor)
 		{
-			if (stColorTemp[cor].byNum > 0 && !CheckCanHuSingle(stColorTemp[cor], nNaiTry[cor], nNaiZiNum))
+			if (stColorTemp[cor].byNum == 0)
+				continue;
+
+			if (!CheckCanHuSingle(stColorTemp[cor], nNaiTry[cor], nNaiZiNum))
 				return false;
 
 			nNaiZiNum -= nNaiTry[cor];
-			byJiangNum += stColorTemp[cor].byNum + nNaiTry[cor] == 2;
+			byJiangNum += (stColorTemp[cor].byNum + nNaiTry[cor]) == 2;
 			if (byJiangNum > nNaiZiNum + 1)
 				return false;
 		}
