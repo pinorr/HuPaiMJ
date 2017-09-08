@@ -39,7 +39,7 @@ void main()
 		g_HuCardAll[i * 4 + 3] = i;
 	}
 
-	int gui_index = 5;
+	int gui_index = 33;
 	int total = 0;
 	srand(1);
 	for (int n = 0; n < MAX_COUNT; ++n)
