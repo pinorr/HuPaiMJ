@@ -22,11 +22,6 @@ using namespace std;
 #define BIT_VAL_NUM						3					//一个值占的bit数
 #define BIT_VAL_FLAG					0x07				//
 
-inline void getIndexByKey(int llVal, BYTE byIndex[MAX_KEY_NUM])
-{
-	for (int i = 0; i < MAX_KEY_NUM; ++i)
-		byIndex[i] = (llVal >> (BIT_VAL_NUM*i))&BIT_VAL_FLAG;
-}
 inline int getKeyByIndex(BYTE byIndex[MAX_KEY_NUM], BYTE byNum = MAX_KEY_NUM)
 {
 	int nKey = 0;
@@ -38,9 +33,10 @@ inline int getKeyByIndex(BYTE byIndex[MAX_KEY_NUM], BYTE byNum = MAX_KEY_NUM)
 inline bool isValidKey(int llVal)
 {
 	BYTE byIndex[MAX_KEY_NUM] = {};
-	getIndexByKey(llVal, byIndex);
-	if (byIndex[9] > MAX_NAI_NUM)
-		return false;
+	for (int i = 0; i < MAX_KEY_NUM; ++i)
+		byIndex[i] = (llVal >> (BIT_VAL_NUM*i))&BIT_VAL_FLAG;
+
+	if (byIndex[9] > MAX_NAI_NUM)	return false;
 
 	int nNum = 0;
 	for (int i = 0; i < MAX_KEY_NUM; ++i)
@@ -54,21 +50,19 @@ inline bool isValidKey(int llVal)
 inline BYTE getNumByKey(int llVal, BYTE byNum = MAX_KEY_NUM)
 {
 	BYTE byIndex[MAX_KEY_NUM] = {};
-	getIndexByKey(llVal, byIndex);
+	for (int i = 0; i < MAX_KEY_NUM; ++i)
+		byIndex[i] = (llVal >> (BIT_VAL_NUM*i))&BIT_VAL_FLAG;
+
 	BYTE nNum = 0;
 	for (int i = 0; i < byNum; ++i)
 		nNum += byIndex[i];
 
 	return nNum;
 }
-inline BYTE getNaiZiByKey(int llVal)
-{
-	return (llVal >> (BIT_VAL_NUM * 9))&BIT_VAL_FLAG;
-}
 inline void addMap(hash_map<int, BYTE> mapTemp[], int llVal)
 {
 	BYTE nNum  = getNumByKey(llVal, MAX_VAL_NUM);
-	BYTE byNum = getNaiZiByKey(llVal);
+	BYTE byNum = (llVal >> (BIT_VAL_NUM * 9))&BIT_VAL_FLAG;
 	int  val = (llVal & 0x7FFFFFF);
 	hash_map<int, BYTE>::iterator iter = mapTemp[nNum].find(val);
 	if (iter != mapTemp[nNum].end())
@@ -77,10 +71,10 @@ inline void addMap(hash_map<int, BYTE> mapTemp[], int llVal)
 		mapTemp[nNum][val] = byNum;
 }
 
-set<int>				g_setSingle;		//单个顺子+刻子		50个
-set<int>				g_setSingleFZ;		//单个顺子+刻子		22个
-set<int>				g_setSingleJiang;	//单个将			19个
-set<int>				g_setSingleJiangFZ;	//单个将			15个
+set<int>					g_setSingle;		//单个顺子+刻子		50个
+set<int>					g_setSingleFZ;		//单个顺子+刻子		22个
+set<int>					g_setSingleJiang;	//单个将			19个
+set<int>					g_setSingleJiangFZ;	//单个将			15个
 
 hash_map<int, BYTE>			g_mapHuAll[15];
 hash_map<int, BYTE>			g_mapHuAllFZ[15];
@@ -91,7 +85,7 @@ public:
 	CHuPaiMJ() {};
 	~CHuPaiMJ() {};
 
-public:
+private:
 	static void TrainSingle()			// 1.三张单独组合
 	{
 		BYTE byTemp[MAX_KEY_NUM] = {};
@@ -223,16 +217,6 @@ public:
 		}
 	}
 
-	static void TrainAll()
-	{
-		TrainSingle();
-		TrainAllComb(g_setSingle, g_mapHuAll);
-		TrainAllComb(g_setSingleFZ, g_mapHuAllFZ);
-		TrainAllComb_Jiang(g_setSingleJiang, g_mapHuAll);
-		TrainAllComb_Jiang(g_setSingleJiangFZ, g_mapHuAllFZ);
-		cout << "pino train end!" << endl;
-	}
-
 	static bool CheckCanHuSingle(BYTE byType, BYTE byCards[10], BYTE &byNaiNum, BYTE byNaiMax)
 	{
 		bool bSuc = false;
@@ -269,6 +253,17 @@ public:
 		byNaiNum = 0;
 		return false;
 	}
+
+public:
+	static void TrainAll()
+	{
+		TrainSingle();
+		TrainAllComb(g_setSingle, g_mapHuAll);
+		TrainAllComb(g_setSingleFZ, g_mapHuAllFZ);
+		TrainAllComb_Jiang(g_setSingleJiang, g_mapHuAll);
+		TrainAllComb_Jiang(g_setSingleJiangFZ, g_mapHuAllFZ);
+		cout << "pino train end!" << endl;
+	}	
 
 	static bool CheckCanHu(BYTE byCardSrc[], BYTE byNaiIndex)
 	{
