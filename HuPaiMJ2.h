@@ -81,10 +81,6 @@ hash_map<int, BYTE>			g_mapHuAllFZ[15];
 
 class CHuPaiMJ
 {
-public:
-	CHuPaiMJ() {};
-	~CHuPaiMJ() {};
-
 private:
 	static void TrainSingle()			// 1.三张单独组合
 	{
