@@ -16,6 +16,17 @@ purpose:	麻将胡牌提示算法(第3版)
 
 using namespace std;
 
+//麻将颜色（种类）定义
+enum enColorMJ
+{
+	enColorMJ_WAN = 0,  //万
+	enColorMJ_TONG,     //筒
+	enColorMJ_TIAO,     //条
+	enColorMJ_FenZi,    //风、字 牌
+	enColorMJ_Max,
+};
+
+#define MAX_TOTAL_TYPE					34
 #define MAX_VAL_NUM						9
 #define MAX_KEY_NUM						(MAX_VAL_NUM+1)		//9+赖子
 #define MAX_NAI_NUM						4					//赖子最大个数
