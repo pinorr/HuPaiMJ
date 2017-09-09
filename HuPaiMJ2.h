@@ -12,7 +12,7 @@ purpose:	麻将胡牌提示算法(第3版)
 #include <vector>
 #include <windows.h>
 #include <iostream>
-#include <hash_map>  
+#include <unordered_map>  
 
 using namespace std;
 
@@ -67,12 +67,12 @@ inline BYTE getNumByKey(int llVal, BYTE byNum = MAX_KEY_NUM)
 		nNum += byIndex[i];
 	return nNum;
 }
-inline void addMap(hash_map<int, BYTE> mapTemp[], int llVal)
+inline void addMap(unordered_map<int, BYTE> mapTemp[], int llVal)
 {
 	BYTE nNum  = getNumByKey(llVal, MAX_VAL_NUM);
 	BYTE byNum = (llVal >> (BIT_VAL_NUM * 9))&BIT_VAL_FLAG;
 	int  val = (llVal & 0x7FFFFFF);
-	hash_map<int, BYTE>::iterator iter = mapTemp[nNum].find(val);
+	unordered_map<int, BYTE>::iterator iter = mapTemp[nNum].find(val);
 	if (iter != mapTemp[nNum].end())
 		iter->second = min(byNum, iter->second);
 	else
@@ -84,8 +84,8 @@ set<int>					g_setSingleFZ;		//单个顺子+刻子		22个
 set<int>					g_setSingleJiang;	//单个将			19个
 set<int>					g_setSingleJiangFZ;	//单个将			15个
 
-hash_map<int, BYTE>			g_mapHuAll[15];
-hash_map<int, BYTE>			g_mapHuAllFZ[15];
+unordered_map<int, BYTE>			g_mapHuAll[15];
+unordered_map<int, BYTE>			g_mapHuAllFZ[15];
 
 class CHuPaiMJ
 {
@@ -143,7 +143,7 @@ private:
 		}
 	};
 
-	static void TrainAllComb(const set<int> &setSingle, hash_map<int, BYTE> mapOut[])
+	static void TrainAllComb(const set<int> &setSingle, unordered_map<int, BYTE> mapOut[])
 	{
 		int nAll = 0;
 		int nSingle[100] = {};
@@ -175,7 +175,7 @@ private:
 		}
 	}
 
-	static void TrainAllComb_Jiang(const set<int> &setSingle, hash_map<int, BYTE> mapOut[])
+	static void TrainAllComb_Jiang(const set<int> &setSingle, unordered_map<int, BYTE> mapOut[])
 	{
 		int nAll = 0;
 		int nSingle[100] = {};
@@ -184,7 +184,7 @@ private:
 		for (; iter != setSingle.end(); ++iter)
 			nSingle[nAll++] = *iter;
 
-		hash_map<int, BYTE> mapTemp[15];
+		unordered_map<int, BYTE> mapTemp[15];
 		for (int j = 0; j < 15; ++j)
 			mapTemp[j] = mapOut[j];
 
@@ -193,7 +193,7 @@ private:
 			for (int j = 0; j < 15; ++j)
 			{
 				addMap(mapOut, nSingle[i]);
-				hash_map<int, BYTE>::iterator iter_u = mapTemp[j].begin();
+				unordered_map<int, BYTE>::iterator iter_u = mapTemp[j].begin();
 				for (; iter_u != mapTemp[j].end(); ++iter_u)
 				{
 					int nTemp = nSingle[i] + iter_u->first + (int(iter_u->second & BIT_VAL_FLAG) << 27);
@@ -214,7 +214,7 @@ private:
 		BYTE nNum = getNumByKey(nVal, MAX_VAL_NUM);
 		if (byType == enColorMJ_FenZi)
 		{
-			hash_map<int, BYTE>::iterator iterFind = g_mapHuAllFZ[nNum].find(nVal);
+			unordered_map<int, BYTE>::iterator iterFind = g_mapHuAllFZ[nNum].find(nVal);
 			if (iterFind != g_mapHuAllFZ[nNum].end())
 			{
 				byNaiNum = iterFind->second;
@@ -224,7 +224,7 @@ private:
 		}
 		else
 		{
-			hash_map<int, BYTE>::iterator iterFind = g_mapHuAll[nNum].find(nVal);
+			unordered_map<int, BYTE>::iterator iterFind = g_mapHuAll[nNum].find(nVal);
 			if (iterFind != g_mapHuAll[nNum].end())
 			{
 				byNaiNum = iterFind->second;
