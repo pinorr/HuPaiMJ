@@ -2,7 +2,7 @@
 created:	pinorr
 file base:	HuPaiMJ.h
 author:		pinorr	Q 505971450
-purpose:	Âé½«ºúÅÆÌáÊ¾Ëã·¨(µÚ4°æ)
+purpose:	éº»å°†èƒ¡ç‰Œç®—æ³•(ç¬¬4ç‰ˆ)
 *********************************************************************/
 
 #ifndef __HU_PAI_MJ3_H__
@@ -20,25 +20,25 @@ namespace ArrayMJ
 {	
 #define MAX_TOTAL_TYPE					34
 #define MAX_VAL_NUM						9
-#define MAX_KEY_NUM						(MAX_VAL_NUM+1)		//9+Àµ×Ó
-#define MAX_NAI_NUM						4					//Àµ×Ó×î´ó¸öÊı
-#define BIT_VAL_NUM						3					//Ò»¸öÖµÕ¼µÄbitÊı
+#define MAX_KEY_NUM						(MAX_VAL_NUM+1)		//9+èµ–å­
+#define MAX_NAI_NUM						4					//èµ–å­æœ€å¤§ä¸ªæ•°
+#define BIT_VAL_NUM						3					//ä¸€ä¸ªå€¼å çš„bitæ•°
 #define BIT_VAL_FLAG					0x07				//
 
-	//Âé½«ÑÕÉ«£¨ÖÖÀà£©¶¨Òå
+	//éº»å°†é¢œè‰²ï¼ˆç§ç±»ï¼‰å®šä¹‰
 	enum enColorMJ
 	{
-		enColorMJ_WAN = 0,  //Íò
-		enColorMJ_TONG,     //Í²
-		enColorMJ_TIAO,     //Ìõ
-		enColorMJ_FenZi,    //·ç¡¢×Ö ÅÆ
+		enColorMJ_WAN = 0,  //ä¸‡
+		enColorMJ_TONG,     //ç­’
+		enColorMJ_TIAO,     //æ¡
+		enColorMJ_FenZi,    //é£ã€å­— ç‰Œ
 		enColorMJ_Max,
 	};
 
-	set<int>							g_setSingle;		//µ¥¸öË³×Ó+¿Ì×Ó		50¸ö
-	set<int>							g_setSingleFZ;		//µ¥¸öË³×Ó+¿Ì×Ó		22¸ö
-	set<int>							g_setSingleJiang;	//µ¥¸ö½«			19¸ö
-	set<int>							g_setSingleJiangFZ;	//µ¥¸ö½«			15¸ö
+	set<int>							g_setSingle;		//å•ä¸ªé¡ºå­+åˆ»å­		50ä¸ª
+	set<int>							g_setSingleFZ;		//å•ä¸ªé¡ºå­+åˆ»å­		22ä¸ª
+	set<int>							g_setSingleJiang;	//å•ä¸ªå°†			19ä¸ª
+	set<int>							g_setSingleJiangFZ;	//å•ä¸ªå°†			15ä¸ª
 
 	BYTE								g_byArray[262144];
 	BYTE								g_byArrayFZ[262144];
@@ -119,7 +119,7 @@ namespace ArrayMJ
 			BYTE byTemp[MAX_KEY_NUM] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 3 };
 			g_setSingle.insert(getKeyByIndex(byTemp));
 			g_setSingleFZ.insert(getKeyByIndex(byTemp));
-			// 1.1 ¿Ì×Ó
+			// 1.1 åˆ»å­
 			for (int i = 0; i < MAX_VAL_NUM; ++i)
 			{
 				memset(byTemp, 0, MAX_KEY_NUM);
@@ -127,18 +127,18 @@ namespace ArrayMJ
 				{
 					byTemp[i] = 3 - n;	byTemp[9] = n;
 					g_setSingle.insert(getKeyByIndex(byTemp));
-					if (i < 7)	//·ç¡¢×ÖÅÆ×î¶à7ÕÅ
+					if (i < 7)	//é£ã€å­—ç‰Œæœ€å¤š7å¼ 
 						g_setSingleFZ.insert(getKeyByIndex(byTemp));
 				}
 			}
-			// 1.2 Ë³×Ó Ã»Àµ×Ó
+			// 1.2 é¡ºå­ æ²¡èµ–å­
 			for (int i = 0; i < MAX_VAL_NUM - 2; ++i)
 			{
 				memset(byTemp, 0, MAX_KEY_NUM);
 				byTemp[i] = 1;	byTemp[i + 1] = 1;	byTemp[i + 2] = 1;
 				g_setSingle.insert(getKeyByIndex(byTemp));
 			}
-			// 1.3 Ë³×Ó 1¸öÀµ×Ó (2¸öÀµ×ÓÊ±Ò²¾ÍÊÇ¿Ì×Ó)
+			// 1.3 é¡ºå­ 1ä¸ªèµ–å­ (2ä¸ªèµ–å­æ—¶ä¹Ÿå°±æ˜¯åˆ»å­)
 			for (int i = 0; i < MAX_VAL_NUM - 2; ++i)
 			{
 				for (int n = 0; n < 3; ++n)
@@ -149,7 +149,7 @@ namespace ArrayMJ
 					g_setSingle.insert(getKeyByIndex(byTemp));
 				}
 			}
-			// 2.1 ½«ÅÆ
+			// 2.1 å°†ç‰Œ
 			memset(byTemp, 0, MAX_KEY_NUM);
 			byTemp[9] = 2;
 			g_setSingleJiang.insert(getKeyByIndex(byTemp));
@@ -161,7 +161,7 @@ namespace ArrayMJ
 				{
 					byTemp[i] = 2 - n;	byTemp[9] = n;
 					g_setSingleJiang.insert(getKeyByIndex(byTemp));
-					if (i < 7)	//·ç¡¢×ÖÅÆ×î¶à7ÕÅ
+					if (i < 7)	//é£ã€å­—ç‰Œæœ€å¤š7å¼ 
 						g_setSingleJiangFZ.insert(getKeyByIndex(byTemp));
 				}
 			}
