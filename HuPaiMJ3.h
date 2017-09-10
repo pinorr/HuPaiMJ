@@ -20,9 +20,9 @@ namespace ArrayMJ
 {	
 	#define MAX_TOTAL_TYPE					34
 	#define MAX_VAL_NUM					9
-	#define MAX_KEY_NUM					(MAX_VAL_NUM+1)		//9+赖子
-	#define MAX_NAI_NUM					4					//赖子最大个数
-	#define BIT_VAL_NUM					3					//一个值占的bit数
+	#define MAX_KEY_NUM					(MAX_VAL_NUM+1)			//9+赖子
+	#define MAX_NAI_NUM					4				//赖子最大个数
+	#define BIT_VAL_NUM					3				//一个值占的bit数
 	#define BIT_VAL_FLAG					0x07				//
 
 	//麻将颜色（种类）定义
@@ -287,6 +287,7 @@ namespace ArrayMJ
 				for (int i = 0; i < 15; ++i)
 					g_mapHuAll[i].clear();
 
+				/*
 				// just show info
 				int nZero = 0, nZeroFZ = 0, nError = 0, nAll = 0;
 				for (int i = 0; i < sizeof(g_byArray); ++i)
@@ -309,6 +310,7 @@ namespace ArrayMJ
 				cout << "nZero = " << nAll - nZero << " / " << nZero << endl;
 				cout << "nZeroFZ = " << nAll - nZeroFZ << " / " << nZeroFZ << endl;
 				cout << "nError = " << nAll - nError << " / " << nError << endl;
+				//*/
 			}
 			else
 				cout << "already trained!" << endl;
