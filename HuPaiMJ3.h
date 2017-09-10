@@ -351,20 +351,11 @@ namespace ArrayMJ
 
 				if (g_byError[nVal]) return false;
 
-				nNaiTry = (cor == enColorMJ_FenZi) ? g_byArrayFZ[nVal] - 1 : g_byArray[nVal] - 1;
-				if (nNaiTry == 0xFF)
-				{
-					if (byDelIndex != 0xFF)
-					{ 						
-						byCards[9 * cor + byDelIndex] -= 2;
-						--cor; ++byJiangNum;
-						continue;
-					}
-					return false;
-				}
-							
-				byJiangNum += ((nNum + nNaiTry) % 3 == 2);
-				if (nNaiZiNum < nNaiTry || byJiangNum + nNaiTry > nNaiZiNum + 1)
+				nNaiTry = (cor == enColorMJ_FenZi) ? g_byArrayFZ[nVal] - 1 : g_byArray[nVal] - 1;				
+				if (nNaiTry != 0xFF)
+					byJiangNum += ((nNum + nNaiTry) % 3 == 2);
+				
+				if (nNaiTry == 0xFF || nNaiZiNum < nNaiTry || byJiangNum + nNaiTry > nNaiZiNum + 1)
 				{
 					if (byDelIndex != 0xFF)
 					{
