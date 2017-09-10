@@ -331,14 +331,14 @@ namespace ArrayMJ
 			{				
 				int nMax = (cor == enColorMJ_FenZi) ? 7 : 9;
 				int nVal = 0, nNum = 0;
-				BYTE byDel = 0, byTemp = 0;
+				BYTE byDelIndex = 0xFF, byTemp = 0;
 				for (int i = 0; i < nMax; ++i)
 				{
 					byTemp = byCards[9 * cor + i];
 					nNum += byTemp;
 					if (byTemp > 3)
 					{
-						++byDel;
+						byDelIndex = i;
 						nVal |= (int)(byTemp - 3) << (2 * i);
 					}						
 					else
@@ -347,16 +347,32 @@ namespace ArrayMJ
 
 				if (nNum == 0) continue;
 
-				if (byDel == 0 && g_byError[nVal])
-					return false;
+				if (g_byError[nVal]) return false;
 
 				nNaiTry = (cor == enColorMJ_FenZi) ? g_byArrayFZ[nVal] - 1 : g_byArray[nVal] - 1;
-				if (nNaiTry == 0xFF) return false;
-
-				nNaiZiNum -= nNaiTry;
-				byJiangNum += ((nNum + nNaiTry) % 3 == 2);
-				if (nNaiZiNum < 0 || byJiangNum > nNaiZiNum + 1)
+				if (nNaiTry == 0xFF)
+				{
+					if (byDelIndex != 0xFF)
+					{ 						
+						byCards[9 * cor + byDelIndex] -= 2;
+						--cor; ++byJiangNum;
+						continue;
+					}
 					return false;
+				}
+							
+				byJiangNum += ((nNum + nNaiTry) % 3 == 2);
+				if (nNaiZiNum < nNaiTry || byJiangNum + nNaiTry > nNaiZiNum + 1)
+				{
+					if (byDelIndex != 0xFF)
+					{
+						byCards[9 * cor + byDelIndex] -= 2;
+						--cor; ++byJiangNum;
+						continue;
+					}
+					return false;
+				}
+				nNaiZiNum -= nNaiTry;				
 			}
 			return byJiangNum > 0 || nNaiZiNum >= 2;
 		}
