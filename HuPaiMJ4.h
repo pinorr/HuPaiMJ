@@ -301,17 +301,13 @@ namespace FinalMJ
 				int nVal = 0, nNum = 0;
 
 				bool isArrayFlag = true;
-				BYTE byDelIndex = 0xFF, byTemp = 0;
+				BYTE byTemp = 0;
 				for (int i = 0; i < nMax; ++i)
 				{
 					byTemp = byCards[9 * cor + i];
 					nNum += byTemp;
 					if (byTemp > 3)
-					{
-						isArrayFlag = false;
-						byDelIndex = i;
-						nVal |= (int)(byTemp - 3) << (2 * i);
-					}						
+						isArrayFlag = false;					
 					else
 						nVal |= (int)(byTemp) << (2 * i);
 				}
@@ -347,18 +343,13 @@ namespace FinalMJ
 
 				if (nNaiTry != 0xFF)
 					byJiangNum += ((nNum + nNaiTry) % 3 == 2);
-				
-				if (nNaiTry == 0xFF || nNaiZiNum < nNaiTry || byJiangNum + nNaiTry > nNaiZiNum + 1)
-				{
-					if (byDelIndex != 0xFF)
-					{
-						byCards[9 * cor + byDelIndex] -= 2;
-						--cor; ++byJiangNum;
-						continue;
-					}
+				else
 					return false;
-				}
-				nNaiZiNum -= nNaiTry;				
+				
+				nNaiZiNum -= nNaiTry;
+
+				if (byJiangNum > nNaiZiNum + 1)
+					return false;
 			}
 			return byJiangNum > 0 || nNaiZiNum >= 2;
 		}
